@@ -508,7 +508,7 @@ let MONTH = 'all';
 // ══════════════════════════════════════
 //  CSV FETCH
 // ══════════════════════════════════════
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVXtbfr-6SZ1_Mbg107qCqNO0q0hc4ghckvGt0DifJsOrIlx5pEgLeuKaCbsbHtYQmtA/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1tvpyQ9QUCRRKtcyJvsdYgEXZoE-i6SbtM7HZkPdPBM8BCQZW86ClRZ_0nfkWOrc-7g/exec";
 async function fetchCSV(sheet){
   const r = await fetch(SCRIPT_URL + '?sheet=' + encodeURIComponent(sheet), {redirect:'follow'});
   if(!r.ok) throw new Error(sheet);
@@ -761,4 +761,3 @@ loadData();
 </script>
 </body>
 </html>
-
