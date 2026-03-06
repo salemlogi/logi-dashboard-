@@ -293,17 +293,7 @@ tbody tr:hover td{background:rgba(255,255,255,.025)}
 
 
 
-.pwd-overlay{position:fixed;inset:0;z-index:9999;background:#07090f;display:flex;align-items:center;justify-content:center}
-.pwd-box{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:50px;display:flex;flex-direction:column;align-items:center;gap:20px;min-width:340px}
-.pwd-title{font-size:13px;color:#8a9fc0;font-weight:700;letter-spacing:1px}
-.pwd-logo-txt{font-family:'Montserrat',sans-serif;font-style:italic;font-weight:900;font-size:50px;letter-spacing:-2px}
-.pL{color:#fff}.pO{background:linear-gradient(135deg,#ff6b35,#e8106a);-webkit-background-clip:text;background-clip:text;color:transparent}.pG{color:#38bdf8}.pI{color:#a78bfa}
-.pwd-field{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:14px 20px;font-family:'Cairo',sans-serif;font-size:16px;font-weight:700;color:#fff;text-align:center;letter-spacing:3px;outline:none;transition:.2s}
-.pwd-field:focus{border-color:#38bdf8;box-shadow:0 0 20px rgba(56,189,248,.2)}
-.pwd-submit{width:100%;background:linear-gradient(135deg,#38bdf8,#a78bfa);border:none;border-radius:10px;padding:14px;font-family:'Cairo',sans-serif;font-size:15px;font-weight:800;color:#000;cursor:pointer;transition:.2s}
-.pwd-submit:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(56,189,248,.3)}
-.pwd-err{font-size:12px;color:#f87171;font-weight:700;height:16px;opacity:0;transition:.2s}
-.pwd-err.on{opacity:1}
+
 </style>
 </head>
 <body>
@@ -323,15 +313,6 @@ tbody tr:hover td{background:rgba(255,255,255,.025)}
 
 
 
-<div class="pwd-overlay" id="pOverlay">
-  <div class="pwd-box">
-    <div class="pwd-logo-txt"><span class="pL">L</span><span class="pO">o</span><span class="pG">g</span><span class="pI">i</span></div>
-    <div class="pwd-title">أدخل رمز الدخول</div>
-    <input class="pwd-field" id="pField" type="password" placeholder="••••••" onkeydown="if(event.key==='Enter')pCheck()">
-    <button class="pwd-submit" onclick="pCheck()">دخول ←</button>
-    <div class="pwd-err" id="pErr">❌ رمز خاطئ</div>
-  </div>
-</div>
 <div class="shell">
 
 <!-- ══ HEADER ══ -->
@@ -784,10 +765,6 @@ setInterval(loadData, 5*60*1000);
 if(sessionStorage.getItem('logi_auth')==='1'){ document.getElementById('pwd-screen').style.display='none'; loadData(); }
 }
 
-// PASSWORD
-function pCheck(){
-  if(document.getElementById('pField').value==='10109'){
-    document.getElementById('pOverlay').style.display='none';
     sessionStorage.setItem('auth','1');
   } else {
     document.getElementById('pErr').classList.add('on');
