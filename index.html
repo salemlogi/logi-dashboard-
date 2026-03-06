@@ -517,7 +517,7 @@ let MONTH = 'all';
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYnaodqiWoX1zxI_Nur8a--p3cH4FgwZiBKRdXCU1NSxaqBHG0yiCv_2eAJCJu0jTLHQ/exec";
 async function fetchCSV(sheet){
   const url = SCRIPT_URL + '?sheet=' + encodeURIComponent(sheet);
-  const r = await fetch(url);
+  const r = await fetch(url, {redirect:'follow', mode:'cors'});
   const text = await r.text();
   const data = JSON.parse(text);
   return data.map(row=>{
