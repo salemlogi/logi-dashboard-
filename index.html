@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0061)file:///C:/Users/SalemAlshimali/Downloads/logi_dashboard.html -->
-<html lang="ar" dir="rtl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Logi — Operations Center</title>
-<link href="./Logi — Operations Center_files/css2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Montserrat:ital,wght@1,900&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════
    ROOT & RESET
@@ -295,13 +295,13 @@ tbody tr:hover td{background:rgba(255,255,255,.025)}
 <body>
 
 <!-- BG -->
-<canvas id="bg-canvas" width="1536" height="730"></canvas>
+<canvas id="bg-canvas"></canvas>
 <div class="blob b1"></div>
 <div class="blob b2"></div>
 <div class="blob b3"></div>
 
 <!-- LOADING -->
-<div class="loading" id="loading" style="display: none;">
+<div class="loading" id="loading">
   <div class="spinner"></div>
   <div class="loading-txt">جاري تحميل البيانات...</div>
   <div class="loading-sub">يتصل بـ Google Sheets</div>
@@ -324,49 +324,49 @@ tbody tr:hover td{background:rgba(255,255,255,.025)}
   </div>
   <div class="hdr-right">
     <div class="hdr-pill pill-live" onclick="refreshData()" id="live-pill">
-      <span class="live-dot" id="live-dot" style="background: var(--red);"></span>
-      <span id="live-txt">خطأ</span>
+      <span class="live-dot" id="live-dot"></span>
+      <span id="live-txt">تحديث</span>
     </div>
     <div class="hdr-pill pill-sync" id="sync-txt">—</div>
-    <div class="hdr-pill pill-date" id="hdr-date">الخميس 5 مارس</div>
+    <div class="hdr-pill pill-date" id="hdr-date">—</div>
   </div>
 </header>
 
 <!-- ══ NAV ══ -->
 <div class="nav-wrap">
   <div class="nav-tabs">
-    <button class="nav-tab" onclick="showPage(&#39;home&#39;,this)">
+    <button class="nav-tab active" onclick="showPage('home',this)">
       <span class="tab-badge" id="tb-home">—</span>نظرة المدير
     </button>
-    <button class="nav-tab active" onclick="showPage(&#39;atm&#39;,this)">
+    <button class="nav-tab" onclick="showPage('atm',this)">
       <span class="tab-badge" id="tb-atm">0</span>مشاكل الصرافة
     </button>
-    <button class="nav-tab" onclick="showPage(&#39;cash&#39;,this)">
+    <button class="nav-tab" onclick="showPage('cash',this)">
       <span class="tab-badge" id="tb-cash">0</span>الكاش / السلف
     </button>
-    <button class="nav-tab" onclick="showPage(&#39;leaves&#39;,this)">
+    <button class="nav-tab" onclick="showPage('leaves',this)">
       <span class="tab-badge" id="tb-leaves">0</span>الإجازات
     </button>
-    <button class="nav-tab" onclick="showPage(&#39;reps&#39;,this)">
+    <button class="nav-tab" onclick="showPage('reps',this)">
       <span class="tab-badge" id="tb-reps">0</span>المناديب
     </button>
   </div>
   <div class="filter-row">
     <span class="filter-lbl">📅</span>
-    <button class="f-btn active" onclick="setMonth(&#39;all&#39;,this)">الكل</button>
-    <button class="f-btn" onclick="setMonth(&#39;01&#39;,this)">يناير</button>
-    <button class="f-btn" onclick="setMonth(&#39;02&#39;,this)">فبراير</button>
-    <button class="f-btn" onclick="setMonth(&#39;03&#39;,this)">مارس</button>
-    <button class="f-btn" onclick="setMonth(&#39;04&#39;,this)">أبريل</button>
-    <button class="f-btn" onclick="setMonth(&#39;05&#39;,this)">مايو</button>
-    <button class="f-btn" onclick="setMonth(&#39;06&#39;,this)">يونيو</button>
+    <button class="f-btn active" onclick="setMonth('all',this)">الكل</button>
+    <button class="f-btn" onclick="setMonth('01',this)">يناير</button>
+    <button class="f-btn" onclick="setMonth('02',this)">فبراير</button>
+    <button class="f-btn" onclick="setMonth('03',this)">مارس</button>
+    <button class="f-btn" onclick="setMonth('04',this)">أبريل</button>
+    <button class="f-btn" onclick="setMonth('05',this)">مايو</button>
+    <button class="f-btn" onclick="setMonth('06',this)">يونيو</button>
   </div>
 </div>
 
 <!-- ══ PAGE: HOME ══ -->
-<div id="home" class="page">
+<div id="home" class="page active">
   <div class="kpi-row">
-    <div class="kcard kc-blue" onclick="goPage(&#39;atm&#39;)">
+    <div class="kcard kc-blue" onclick="goPage('atm')">
       <div class="kcard-glow"></div>
       <div class="kcard-icon">💳</div>
       <div class="kcard-lbl">مشاكل الصرافة</div>
@@ -374,7 +374,7 @@ tbody tr:hover td{background:rgba(255,255,255,.025)}
       <div class="kcard-sub">حالة مسجلة</div>
       <div class="kcard-hint">← التفاصيل</div>
     </div>
-    <div class="kcard kc-purple" onclick="goPage(&#39;cash&#39;)">
+    <div class="kcard kc-purple" onclick="goPage('cash')">
       <div class="kcard-glow"></div>
       <div class="kcard-icon">💰</div>
       <div class="kcard-lbl">سلف معلقة</div>
@@ -382,7 +382,7 @@ tbody tr:hover td{background:rgba(255,255,255,.025)}
       <div class="kcard-sub">كاش / سلفة سابقة</div>
       <div class="kcard-hint">← التفاصيل</div>
     </div>
-    <div class="kcard kc-orange" onclick="goPage(&#39;leaves&#39;)">
+    <div class="kcard kc-orange" onclick="goPage('leaves')">
       <div class="kcard-glow"></div>
       <div class="kcard-icon">🌴</div>
       <div class="kcard-lbl">في إجازة</div>
@@ -390,7 +390,7 @@ tbody tr:hover td{background:rgba(255,255,255,.025)}
       <div class="kcard-sub">مندوب حالياً</div>
       <div class="kcard-hint">← التفاصيل</div>
     </div>
-    <div class="kcard kc-red" onclick="goPage(&#39;atm&#39;)">
+    <div class="kcard kc-red" onclick="goPage('atm')">
       <div class="kcard-glow"></div>
       <div class="kcard-icon">⚠️</div>
       <div class="kcard-lbl">إجمالي المشاكل</div>
@@ -419,7 +419,7 @@ tbody tr:hover td{background:rgba(255,255,255,.025)}
 </div>
 
 <!-- ══ PAGE: ATM ══ -->
-<div id="atm" class="page active">
+<div id="atm" class="page">
   <div class="panel">
     <div class="ph">
       <div class="ph-title">💳 مشاكل الصرافة والبطاقات</div>
@@ -483,14 +483,13 @@ tbody tr:hover td{background:rgba(255,255,255,.025)}
 </div>
 
 </div><!-- /shell -->
-<div class="toast" id="toast" style="color: var(--red);">⚠️ تعذر الاتصال — تحقق من إعدادات المشاركة</div>
+<div class="toast" id="toast"></div>
 
 <script>
 // ══════════════════════════════════════
 //  CONFIG
 // ══════════════════════════════════════
-const SID   = '1cYYJ3BY6vIw_3AcNq6wuhsdNdXcgiZPGYPOCYpk2TRU';
-const BASE  = `https://docs.google.com/spreadsheets/d/${SID}/gviz/tq?tqx=out:csv&sheet=`;
+// Google Apps Script connected
 const MN    = {'01':'يناير','02':'فبراير','03':'مارس','04':'أبريل','05':'مايو','06':'يونيو'};
 const CATS  = {
   'بطاقة مفقودة':'tg-orange','بطاقة لم تصل':'tg-red','صرافة في الطريق':'tg-blue',
@@ -509,27 +508,16 @@ let MONTH = 'all';
 // ══════════════════════════════════════
 //  CSV FETCH
 // ══════════════════════════════════════
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVXtbfr-6SZ1_Mbg107qCqNO0q0hc4ghckvGt0DifJsOrIlx5pEgLeuKaCbsbHtYQmtA/exec";
 async function fetchCSV(sheet){
-  const r = await fetch(BASE + encodeURIComponent(sheet));
+  const r = await fetch(SCRIPT_URL + '?sheet=' + encodeURIComponent(sheet));
   if(!r.ok) throw new Error(sheet);
-  const txt = await r.text();
-  const lines = txt.trim().split('\n');
-  if(lines.length<2) return [];
-  const heads = csvLine(lines[0]);
-  return lines.slice(1).map(l=>{
-    const v=csvLine(l), o={};
-    heads.forEach((h,i)=>o[h.trim()]=(v[i]||'').trim());
+  const data = await r.json();
+  return data.map(row=>{
+    const o={};
+    Object.keys(row).forEach(k=>o[k.trim()]=(row[k]||'').toString().trim());
     return o;
   }).filter(r=>Object.values(r).some(v=>v));
-}
-function csvLine(l){
-  const res=[]; let c='',q=false;
-  for(let i=0;i<l.length;i++){
-    if(l[i]==='"'){q=!q}
-    else if(l[i]===',' && !q){res.push(c);c=''}
-    else c+=l[i];
-  }
-  res.push(c); return res;
 }
 
 // ══════════════════════════════════════
@@ -764,6 +752,5 @@ setInterval(loadData, 5*60*1000);
 // ══════════════════════════════════════
 loadData();
 </script>
-
-
-</body></html>
+</body>
+</html>
