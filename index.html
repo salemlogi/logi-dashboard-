@@ -510,7 +510,7 @@ let MONTH = 'all';
 // ══════════════════════════════════════
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVXtbfr-6SZ1_Mbg107qCqNO0q0hc4ghckvGt0DifJsOrIlx5pEgLeuKaCbsbHtYQmtA/exec";
 async function fetchCSV(sheet){
-  const r = await fetch(SCRIPT_URL + '?sheet=' + encodeURIComponent(sheet));
+  const r = await fetch(SCRIPT_URL + '?sheet=' + encodeURIComponent(sheet), {redirect:'follow'});
   if(!r.ok) throw new Error(sheet);
   const data = await r.json();
   return data.map(row=>{
@@ -555,7 +555,14 @@ function setSyncing(loading, ok){
 // ══════════════════════════════════════
 //  FILTER
 // ══════════════════════════════════════
-function F(key){ return MONTH==='all' ? DATA[key] : DATA[key].filter(r=>(r.Month||r.month||'')===MONTH); }
+function F(key){ 
+  if(MONTH==='all') return DATA[key]; 
+  return DATA[key].filter(r=>{
+    const m = (r.Month||r.month||'').toString().trim();
+    const padded = m.padStart(2,'0');
+    return m===MONTH || padded===MONTH;
+  }); 
+}
 function g(r,...keys){ for(const k of keys){ if(r[k]) return r[k]; } return '—'; }
 function tag(t){ return `<span class="tag ${CATS[t]||'tg-blue'}">${t||'—'}</span>`; }
 function mn(m){ return `<span style="font-size:10px;color:var(--muted)">${MN[m]||m||'—'}</span>`; }
@@ -754,3 +761,4 @@ loadData();
 </script>
 </body>
 </html>
+
