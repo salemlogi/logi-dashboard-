@@ -290,6 +290,84 @@ tbody tr:hover td{background:rgba(255,255,255,.025)}
   box-shadow:0 8px 32px rgba(0,0,0,.5);
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ══════════════════════════════════════
+   PASSWORD SCREEN
+══════════════════════════════════════ */
+.pwd-screen{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:0;
+}
+.pwd-card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:24px;
+  padding:48px 56px;
+  display:flex;flex-direction:column;align-items:center;gap:24px;
+  backdrop-filter:blur(30px);
+  box-shadow:0 32px 80px rgba(0,0,0,.6);
+  animation:pgIn .4s ease;
+}
+.pwd-logo{
+  font-family:'Montserrat',sans-serif;
+  font-style:italic;font-weight:900;
+  font-size:52px;letter-spacing:-2px;
+  margin-bottom:8px;
+}
+.pwd-L{color:#fff}
+.pwd-o{
+  background:linear-gradient(135deg,#ff6b35,#f7931e,#e8106a);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.pwd-g{color:var(--blue)}
+.pwd-i{color:var(--purple);position:relative}
+.pwd-dot{
+  position:absolute;top:-8px;left:50%;transform:translateX(-50%);
+  width:6px;height:6px;border-radius:50%;
+  background:var(--orange);
+  box-shadow:0 0 10px var(--orange);
+  animation:dotBlink 2s ease-in-out infinite;
+}
+.pwd-title{font-size:14px;color:var(--muted2);font-weight:600;letter-spacing:1px}
+.pwd-input-wrap{position:relative;width:260px}
+.pwd-input{
+  width:100%;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;
+  padding:14px 20px;
+  font-family:'Cairo',sans-serif;
+  font-size:18px;font-weight:700;
+  color:var(--text);
+  text-align:center;
+  letter-spacing:4px;
+  outline:none;
+  transition:.2s;
+}
+.pwd-input:focus{border-color:var(--blue);box-shadow:0 0 20px rgba(56,189,248,.2)}
+.pwd-input::placeholder{letter-spacing:1px;font-size:13px;font-weight:400}
+.pwd-btn{
+  width:260px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  border:none;border-radius:12px;
+  padding:14px;
+  font-family:'Cairo',sans-serif;
+  font-size:15px;font-weight:800;
+  color:#000;cursor:pointer;
+  transition:.2s;
+  box-shadow:0 8px 24px rgba(56,189,248,.3);
+}
+.pwd-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(56,189,248,.4)}
+.pwd-btn:active{transform:translateY(0)}
+.pwd-error{
+  font-size:12px;color:var(--red);font-weight:700;
+  opacity:0;transition:.2s;
+  height:16px;
+}
+.pwd-error.show{opacity:1}
+.pwd-hint{font-size:11px;color:var(--muted);margin-top:-8px}
 </style>
 </head>
 <body>
@@ -307,6 +385,22 @@ tbody tr:hover td{background:rgba(255,255,255,.025)}
   <div class="loading-sub">يتصل بـ Google Sheets</div>
 </div>
 
+
+<!-- PASSWORD SCREEN -->
+<div class="pwd-screen" id="pwd-screen">
+  <div class="pwd-card">
+    <div class="pwd-logo">
+      <span class="pwd-L">L</span><span class="pwd-o">o</span><span class="pwd-g">g</span><span class="pwd-i">i<span class="pwd-dot"></span></span>
+    </div>
+    <div class="pwd-title">Operations Center — أدخل رمز الدخول</div>
+    <div class="pwd-input-wrap">
+      <input class="pwd-input" id="pwd-input" type="password" placeholder="رمز الدخول" onkeydown="if(event.key==='Enter')checkPwd()">
+    </div>
+    <button class="pwd-btn" onclick="checkPwd()">دخول →</button>
+    <div class="pwd-error" id="pwd-error">❌ رمز خاطئ — حاول مرة ثانية</div>
+    <div class="pwd-hint">للوصول تواصل مع المسؤول</div>
+  </div>
+</div>
 <div class="shell">
 
 <!-- ══ HEADER ══ -->
@@ -757,7 +851,10 @@ setInterval(loadData, 5*60*1000);
 // ══════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════
-loadData();
+if(sessionStorage.getItem('logi_auth')==='1'){
+  document.getElementById('pwd-screen').style.display='none';
+  loadData();
+}
 </script>
 </body>
 </html>
