@@ -378,30 +378,25 @@ let charts = {};
 // ══════ FETCH via PROXY ══════
 function fetchSheet(sheet){
   return new Promise((resolve,reject)=>{
-    const sid = 'gviz_'+Math.random().toString(36).slice(2);
-    const timeout = setTimeout(()=>{ delete window[sid]; reject(new Error('timeout:'+sheet)); },15000);
-    window[sid] = function(resp){
-      clearTimeout(timeout);
-      delete window[sid];
-      document.getElementById(sid)?.remove();
-      try{
-        const cols = resp.table.cols.map(col=>col.label||col.id);
-        const rows = (resp.table.rows||[]).map(r=>{
+    // Use fetch with CSV format - simplest and most reliable
+    const url = 'https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:csv&sheet='+encodeURIComponent(sheet);
+    fetch(url)
+      .then(r=>r.text())
+      .then(text=>{
+        const lines = text.trim().split('\n');
+        if(lines.length<2){ resolve([]); return; }
+        const headers = lines[0].split(',').map(h=>h.replace(/^"|"$/g,'').trim());
+        const rows = lines.slice(1).map(line=>{
+          const vals = line.match(/(".*?"|[^,]+)(?=,|$)/g)||[];
           const o={};
-          cols.forEach((col,i)=>{
-            const cell = r.c ? r.c[i] : null;
-            o[col.trim()] = (cell&&cell.v!==null&&cell.v!==undefined) ? cell.v.toString().trim() : '';
+          headers.forEach((h,i)=>{
+            o[h] = (vals[i]||'').replace(/^"|"$/g,'').trim();
           });
           return o;
-        }).filter(r=>Object.values(r).some(v=>v!==''));
+        }).filter(r=>Object.values(r).some(v=>v));
         resolve(rows);
-      }catch(e){ reject(e); }
-    };
-    const s=document.createElement('script');
-    s.id=sid;
-    s.onerror=()=>{ clearTimeout(timeout); delete window[sid]; reject(new Error('script error:'+sheet)); };
-    s.src=GVIZ+encodeURIComponent(sheet)+'&tqx=out:json;responseHandler:'+sid;
-    document.head.appendChild(s);
+      })
+      .catch(reject);
   });
 }
 
