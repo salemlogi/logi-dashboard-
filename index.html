@@ -364,8 +364,8 @@ canvas.chart{width:100%!important;height:100%!important}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
 // ══════ CONFIG ══════
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEgp9s6y1UdDU-U8vGfEgMEvVUQYA_E1r5CpSifQakfDHAH9x9GC12M87HKMbZzrLT/exec';
-const PROXY = 'https://corsproxy.io/?';
+const SHEET_ID = '1os08Iv7FsUG42OG174YGHpVHgYCRP6D68FqdLynXXwE';
+const GVIZ = 'https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=';
 const MN = {'01':'يناير','02':'فبراير','03':'مارس','04':'أبريل','05':'مايو','06':'يونيو','07':'يوليو','08':'أغسطس','09':'سبتمبر','10':'أكتوبر','11':'نوفمبر','12':'ديسمبر'};
 const CATS = {'بطاقة مفقودة':'tor','بطاقة لم تصل':'tre','صرافة في الطريق':'tbl','بدل فاقد':'tor','بطاقة منتهية':'tbl','عاجل':'tre','سلفة سابقة':'tpu','طلب سلفة':'tbl','مرفوعة':'tgr','قادمة':'tbl','طويلة':'tor'};
 const BCOLS = ['var(--blue)','var(--red)','var(--orange)','var(--purple)','var(--green)','var(--pink)'];
@@ -378,26 +378,29 @@ let charts = {};
 // ══════ FETCH via PROXY ══════
 function fetchSheet(sheet){
   return new Promise((resolve,reject)=>{
-    const cb = 'logi_'+sheet+'_'+Date.now();
-    const timeout = setTimeout(()=>{
-      delete window[cb];
-      reject(new Error('timeout: '+sheet));
-    }, 15000);
-    window[cb] = function(data){
+    const cb = 'gviz_'+sheet.replace(/[^a-z]/gi,'')+'_'+Date.now();
+    const timeout = setTimeout(()=>{ delete window[cb]; reject(new Error('timeout:'+sheet)); },15000);
+    window[cb] = function(resp){
       clearTimeout(timeout);
       delete window[cb];
-      const el = document.getElementById('jsonp_'+sheet);
-      if(el) el.remove();
-      resolve(Array.isArray(data) ? data.map(row=>{
-        const o={};
-        Object.keys(row).forEach(k=>o[k.trim()]=(row[k]===null||row[k]===undefined?'':row[k]).toString().trim());
-        return o;
-      }).filter(r=>Object.values(r).some(v=>v)) : []);
+      document.getElementById('gviz_sc_'+sheet)?.remove();
+      try{
+        const cols = resp.table.cols.map(c=>c.label||c.id);
+        const rows = resp.table.rows.map(r=>{
+          const o={};
+          cols.forEach((col,i)=>{
+            const v = r.c[i];
+            o[col.trim()] = (v&&v.v!==null&&v.v!==undefined) ? v.v.toString().trim() : '';
+          });
+          return o;
+        }).filter(r=>Object.values(r).some(v=>v));
+        resolve(rows);
+      }catch(e){ reject(e); }
     };
-    const s = document.createElement('script');
-    s.id = 'jsonp_'+sheet;
-    s.onerror = ()=>{ clearTimeout(timeout); delete window[cb]; reject(new Error('error: '+sheet)); };
-    s.src = SCRIPT_URL + '?sheet=' + encodeURIComponent(sheet) + '&callback=' + cb;
+    const s=document.createElement('script');
+    s.id='gviz_sc_'+sheet;
+    s.onerror=()=>{ clearTimeout(timeout); delete window[cb]; reject(new Error('error:'+sheet)); };
+    s.src=GVIZ+encodeURIComponent(sheet)+'&tq=select *&tqx=out:json;responseHandler:'+cb;
     document.head.appendChild(s);
   });
 }
