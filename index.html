@@ -378,29 +378,29 @@ let charts = {};
 // ══════ FETCH via PROXY ══════
 function fetchSheet(sheet){
   return new Promise((resolve,reject)=>{
-    const cb = 'gviz_'+sheet.replace(/[^a-z]/gi,'')+'_'+Date.now();
-    const timeout = setTimeout(()=>{ delete window[cb]; reject(new Error('timeout:'+sheet)); },15000);
-    window[cb] = function(resp){
+    const sid = 'gviz_'+Math.random().toString(36).slice(2);
+    const timeout = setTimeout(()=>{ delete window[sid]; reject(new Error('timeout:'+sheet)); },15000);
+    window[sid] = function(resp){
       clearTimeout(timeout);
-      delete window[cb];
-      document.getElementById('gviz_sc_'+sheet)?.remove();
+      delete window[sid];
+      document.getElementById(sid)?.remove();
       try{
-        const cols = resp.table.cols.map(c=>c.label||c.id);
-        const rows = resp.table.rows.map(r=>{
+        const cols = resp.table.cols.map(col=>col.label||col.id);
+        const rows = (resp.table.rows||[]).map(r=>{
           const o={};
           cols.forEach((col,i)=>{
-            const v = r.c[i];
-            o[col.trim()] = (v&&v.v!==null&&v.v!==undefined) ? v.v.toString().trim() : '';
+            const cell = r.c ? r.c[i] : null;
+            o[col.trim()] = (cell&&cell.v!==null&&cell.v!==undefined) ? cell.v.toString().trim() : '';
           });
           return o;
-        }).filter(r=>Object.values(r).some(v=>v));
+        }).filter(r=>Object.values(r).some(v=>v!==''));
         resolve(rows);
       }catch(e){ reject(e); }
     };
     const s=document.createElement('script');
-    s.id='gviz_sc_'+sheet;
-    s.onerror=()=>{ clearTimeout(timeout); delete window[cb]; reject(new Error('error:'+sheet)); };
-    s.src=GVIZ+encodeURIComponent(sheet)+'&tq=select *&tqx=out:json;responseHandler:'+cb;
+    s.id=sid;
+    s.onerror=()=>{ clearTimeout(timeout); delete window[sid]; reject(new Error('script error:'+sheet)); };
+    s.src=GVIZ+encodeURIComponent(sheet)+'&tqx=out:json;responseHandler:'+sid;
     document.head.appendChild(s);
   });
 }
