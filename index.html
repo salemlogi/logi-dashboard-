@@ -516,23 +516,20 @@ let MONTH = 'all';
 // ══════════════════════════════════════
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0A8ufbRFnMSULCMQyYIitl7l8VXzHh4GN6xau7Wv-th8EbGrRsFeH0S6NwGEw7mZ_/exec";
 async function fetchCSV(sheet){
-  return new Promise((resolve, reject) => {
-    const cb = 'cb_' + sheet + '_' + Date.now();
-    window[cb] = function(data){
-      delete window[cb];
-      document.getElementById('jsonp_'+sheet)?.remove();
-      resolve(data.map(row=>{
-        const o={};
-        Object.keys(row).forEach(k=>o[k.trim()]=(row[k]===null||row[k]===undefined?'':row[k]).toString().trim());
-        return o;
-      }).filter(r=>Object.values(r).some(v=>v)));
-    };
-    const s = document.createElement('script');
-    s.id = 'jsonp_' + sheet;
-    s.src = SCRIPT_URL + '?sheet=' + encodeURIComponent(sheet) + '&callback=' + cb;
-    s.onerror = () => reject(new Error('JSONP failed: ' + sheet));
-    document.head.appendChild(s);
-    setTimeout(()=>{ if(window[cb]){ delete window[cb]; reject(new Error('timeout: '+sheet)); } }, 10000);
+  return new Promise((resolve,reject)=>{
+    const target = encodeURIComponent(SCRIPT_URL + '?sheet=' + sheet);
+    const proxy = 'https://api.allorigins.win/get?url=' + target;
+    fetch(proxy)
+      .then(r=>r.json())
+      .then(d=>{
+        const data = JSON.parse(d.contents);
+        resolve(data.map(row=>{
+          const o={};
+          Object.keys(row).forEach(k=>o[k.trim()]=(row[k]===null||row[k]===undefined?'':row[k]).toString().trim());
+          return o;
+        }).filter(r=>Object.values(r).some(v=>v)));
+      })
+      .catch(reject);
   });
 }
 
