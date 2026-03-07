@@ -365,7 +365,7 @@ canvas.chart{width:100%!important;height:100%!important}
 <script>
 // ══════ CONFIG ══════
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbytDjaD7eBD2zPsKiGZXsOgyrDILoTpHWAg-njOqkJR_men4vGW4bYRjsrujJdZ0jIb/exec';
-const PROXY = 'https://api.allorigins.win/get?url=';
+const PROXY = 'https://corsproxy.io/?';
 const MN = {'01':'يناير','02':'فبراير','03':'مارس','04':'أبريل','05':'مايو','06':'يونيو','07':'يوليو','08':'أغسطس','09':'سبتمبر','10':'أكتوبر','11':'نوفمبر','12':'ديسمبر'};
 const CATS = {'بطاقة مفقودة':'tor','بطاقة لم تصل':'tre','صرافة في الطريق':'tbl','بدل فاقد':'tor','بطاقة منتهية':'tbl','عاجل':'tre','سلفة سابقة':'tpu','طلب سلفة':'tbl','مرفوعة':'tgr','قادمة':'tbl','طويلة':'tor'};
 const BCOLS = ['var(--blue)','var(--red)','var(--orange)','var(--purple)','var(--green)','var(--pink)'];
@@ -379,8 +379,8 @@ let charts = {};
 async function fetchSheet(sheet){
   const target = encodeURIComponent(SCRIPT_URL + '?sheet=' + sheet);
   const r = await fetch(PROXY + target);
-  const j = await r.json();
-  const data = JSON.parse(j.contents);
+  const text = await r.text();
+  const data = JSON.parse(text);
   return Array.isArray(data) ? data.map(row=>{
     const o={};
     Object.keys(row).forEach(k=>o[k.trim()]=(row[k]===null||row[k]===undefined?'':row[k]).toString().trim());
